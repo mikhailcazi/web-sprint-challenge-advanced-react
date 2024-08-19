@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
+import { response } from 'msw';
 
 // Suggested initial states
 const initialMessage = ''
@@ -7,15 +8,6 @@ const initialEmail = ''
 const initialSteps = 0
 const initialIndex = 4 // the index the "B" is at
 const baseURL = 'http://localhost:9000/api/result'
-
-// const fetchData = async (payload) => {
-//   await axios.post(baseURL, payload)
-//   .then(res => res)
-//   .then(res => {
-//     console.log(res.data.message)
-//     return res.data.message
-//   })
-// }
 
 export default function AppFunctional(props) {
   // THE FOLLOWING HELPERS ARE JUST RECOMMENDATIONS.
@@ -26,10 +18,31 @@ export default function AppFunctional(props) {
   const [message, setMessage] = useState(initialMessage)
   const [email, setEmail] = useState(initialEmail)
 
+  const fetchData = (payload) => {
+    axios.post(baseURL, payload)
+    .then(res => {
+      console.log(res)
+      return res
+    })
+    .then(res => {
+      setMessage(res.data.message)
+      setEmail(initialEmail)
+    })
+    .catch((err) => console.log(err))
+  }
+  
   useEffect(() => {
     console.log(getXYMessage())
     console.log(email)
   })
+  
+  axios.interceptors.response.use(function (response) {
+    return response;
+  }, function (error) {
+    console.log(error)
+    return error.response
+  });
+
 
   function getXY() {
     // It it not necessary to have a state to track the coordinates.
@@ -52,6 +65,8 @@ export default function AppFunctional(props) {
     // Use this helper to reset all states to their initial values.
     setPosition(initialIndex)
     setSteps(0)
+    setMessage(initialMessage)
+    setEmail(initialEmail)
   }
 
   function getNextIndex(direction) {
@@ -87,7 +102,7 @@ export default function AppFunctional(props) {
     if(nextIndex != position) {
       setPosition(nextIndex)
       setSteps(steps + 1)
-      setMessage('')
+      setMessage(initialMessage)
     } else {
       setMessage("You can't go " + direction)
     }
@@ -103,7 +118,7 @@ export default function AppFunctional(props) {
     evt.preventDefault()
     const xy = getXY()
     const payload = { "x": xy.x, "y": xy.y, "steps": steps, "email": email }
-    // fetchData(payload)
+    fetchData(payload)
   }
 
   return (
@@ -132,7 +147,7 @@ export default function AppFunctional(props) {
         <button id="reset" onClick={reset}>reset</button>
       </div>
       <form onSubmit={onSubmit}>
-        <input id="email" type="email" placeholder="type email" onChange={onChange}></input>
+        <input id="email" type="email" placeholder="type email" onChange={onChange} value={email}></input>
         <input id="submit" type="submit"></input>
       </form>
     </div>
