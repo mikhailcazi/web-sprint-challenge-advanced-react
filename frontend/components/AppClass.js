@@ -2,6 +2,7 @@
 // ❗ OPTIONAL, not required to pass the sprint
 // ❗ OPTIONAL, not required to pass the sprint
 import React from 'react'
+import axios from 'axios';
 
 // Suggested initial states
 const initialMessage = ''
