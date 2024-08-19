@@ -71,7 +71,7 @@ export default class AppClass extends React.Component {
     // It it not necessary to have a state to track the "Coordinates (2, 2)" message for the user.
     // You can use the `getXY` helper above to obtain the coordinates, and then `getXYMessage`
     // returns the fully constructed string.
-    const xy = getXY()
+    const xy = this.getXY()
     return `Coordinates (${xy.x}, ${xy.y})`  
   }
 
@@ -89,7 +89,7 @@ export default class AppClass extends React.Component {
     // This helper takes a direction ("left", "up", etc) and calculates what the next index
     // of the "B" would be. If the move is impossible because we are at the edge of the grid,
     // this helper should return the current index unchanged.
-    const xy = getXY()
+    const xy = this.getXY()
     let nextIndex = this.state.position
     switch(direction) {
       case 'left':
@@ -114,7 +114,7 @@ export default class AppClass extends React.Component {
     // This event handler can use the helper above to obtain a new index for the "B",
     // and change any states accordingly.
     const direction = evt.target.id
-    const nextIndex = getNextIndex(direction)
+    const nextIndex = this.getNextIndex(direction)
     if(nextIndex != position) {
       this.setState({
         position: nextIndex,
@@ -138,7 +138,7 @@ export default class AppClass extends React.Component {
   onSubmit = (evt) => {
     // Use a POST request to send a payload to the server.
     evt.preventDefault()
-    const xy = getXY()
+    const xy = this.getXY()
     const payload = { "x": xy.x, "y": xy.y, "steps": steps, "email": email }
     fetchData(payload)
   }
