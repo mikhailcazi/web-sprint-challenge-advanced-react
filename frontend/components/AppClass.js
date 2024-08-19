@@ -115,10 +115,10 @@ export default class AppClass extends React.Component {
     // and change any states accordingly.
     const direction = evt.target.id
     const nextIndex = this.getNextIndex(direction)
-    if(nextIndex != position) {
+    if(nextIndex != this.state.position) {
       this.setState({
         position: nextIndex,
-        steps: steps + 1,
+        steps: this.state.steps + 1,
         message: initialMessage
       })
     } else {
@@ -131,7 +131,7 @@ export default class AppClass extends React.Component {
   onChange = (evt) => {
     // You will need this to update the value of the input.
     this.setState({
-      message: evt.target.value 
+      email: evt.target.value 
     })
   }
 
@@ -139,8 +139,8 @@ export default class AppClass extends React.Component {
     // Use a POST request to send a payload to the server.
     evt.preventDefault()
     const xy = this.getXY()
-    const payload = { "x": xy.x, "y": xy.y, "steps": steps, "email": email }
-    fetchData(payload)
+    const payload = { "x": xy.x, "y": xy.y, "steps": this.state.steps, "email": this.state.email }
+    this.fetchData(payload)
   }
 
   render() {
